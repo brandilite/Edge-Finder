@@ -1,0 +1,73 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: edgefinder
+      POSTGRES_USER: ${DB_USER:-edgefinder}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-edgefinder}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://${DB_USER:-edgefinder}:${DB_PASSWORD:-changeme}@db:5432/edgefinder
+      REDIS_URL: redis://redis:6379
+      FRED_API_KEY: ${FRED_API_KEY:-}
+      FINNHUB_API_KEY: ${FINNHUB_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      TVPROXY_URL: http://tvproxy:4000
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  tvproxy:
+    build: ./tvproxy
+    environment:
+      TV_SESSION: ${TV_SESSION:-}
+      TV_SIGNATURE: ${TV_SIGNATURE:-}
+      PORT: "4000"
+      WS_PORT: "4001"
+    ports:
+      - "4000:4000"
+      - "4001:4001"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    environment:
+      NEXT_PUBLIC_API_URL: ${API_URL:-http://localhost:8000}
+      NEXT_PUBLIC_TVPROXY_URL: ${TVPROXY_URL:-http://localhost:4000}
+      NEXT_PUBLIC_TV_WS_URL: ${TV_WS_URL:-ws://localhost:4001}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  pgdata:
