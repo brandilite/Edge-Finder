@@ -23,6 +23,17 @@ export async function signInWithDiscord() {
   return data;
 }
 
+export async function signInWithTwitter() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'twitter',
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+    },
+  });
+  if (error) throw error;
+  return data;
+}
+
 export async function signInWithEmail(email: string, password: string) {
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
