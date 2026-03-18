@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js';
+import { createServerClient } from '@supabase/ssr';
 import { NextRequest, NextResponse } from 'next/server';
 
 const supabaseUrl =
@@ -10,7 +10,6 @@ const supabaseAnonKey =
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtc2t2cGN6b2tzZ2R3dnRvZHdhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM1MzQ0MTYsImV4cCI6MjA4OTExMDQxNn0.aakZ8eQeCzrAcc3BLymmY7AtFG-_RBlKJ13-zr_WDqE';
 
 function getSiteOrigin(request: NextRequest): string {
-  // Use X-Forwarded-Host (set by Railway/reverse proxy) or Host header
   const forwardedHost = request.headers.get('x-forwarded-host');
   const forwardedProto = request.headers.get('x-forwarded-proto') || 'https';
   if (forwardedHost) {
@@ -28,12 +27,28 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code');
   const origin = getSiteOrigin(request);
 
+  // Default redirect destination
+  let redirectPath = '/';
+
   if (code) {
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
+    // We need to collect cookies set during exchangeCodeForSession
+    const cookiesToSetOnResponse: Array<{ name: string; value: string; options: Record<string, unknown> }> = [];
+
+    const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll();
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach((cookie) => cookiesToSetOnResponse.push(cookie));
+        },
+      },
+    });
+
     const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error && data.session) {
-      // Check if user has completed onboarding
+      // Check onboarding status
       const { data: profile } = await supabase
         .from('profiles')
         .select('onboarding_completed')
@@ -41,13 +56,19 @@ export async function GET(request: NextRequest) {
         .single();
 
       if (profile && !profile.onboarding_completed) {
-        return NextResponse.redirect(`${origin}/onboarding`);
+        redirectPath = '/onboarding';
       }
-
-      return NextResponse.redirect(`${origin}/`);
+    } else {
+      redirectPath = '/auth/login';
     }
+
+    // Create redirect response and apply all collected cookies
+    const response = NextResponse.redirect(`${origin}${redirectPath}`);
+    cookiesToSetOnResponse.forEach(({ name, value, options }) => {
+      response.cookies.set(name, value, options as Record<string, string>);
+    });
+    return response;
   }
 
-  // If something went wrong, redirect to login
   return NextResponse.redirect(`${origin}/auth/login`);
 }
