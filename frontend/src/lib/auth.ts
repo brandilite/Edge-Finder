@@ -1,11 +1,18 @@
 import { supabase } from './supabase';
 import type { AuthChangeEvent, Session, Subscription } from '@supabase/supabase-js';
 
+function getRedirectUrl() {
+  if (typeof window !== 'undefined') {
+    return `${window.location.origin}/auth/callback`;
+  }
+  return `${process.env.NEXT_PUBLIC_SITE_URL || 'https://edge-finder-production-81b4.up.railway.app'}/auth/callback`;
+}
+
 export async function signInWithGoogle() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
+      redirectTo: getRedirectUrl(),
     },
   });
   if (error) throw error;
@@ -16,7 +23,7 @@ export async function signInWithDiscord() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'discord',
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
+      redirectTo: getRedirectUrl(),
     },
   });
   if (error) throw error;
@@ -27,7 +34,7 @@ export async function signInWithTwitter() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'twitter',
     options: {
-      redirectTo: `${window.location.origin}/auth/callback`,
+      redirectTo: getRedirectUrl(),
     },
   });
   if (error) throw error;
@@ -76,7 +83,7 @@ export async function getSession() {
 
 export async function resetPassword(email: string) {
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/auth/callback`,
+    redirectTo: getRedirectUrl(),
   });
   if (error) throw error;
   return data;
