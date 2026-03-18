@@ -1,49 +1,80 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { apiGet } from '@/lib/api';
-import { SentimentBar } from '@/components/sentiment/SentimentBar';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { useState } from 'react';
+import TechnicalAnalysis from '@/components/tv/TechnicalAnalysis';
+import MiniChart from '@/components/tv/MiniChart';
+
+const PAIRS = [
+  { tv: 'FX:EURUSD', label: 'EUR/USD' },
+  { tv: 'FX:GBPUSD', label: 'GBP/USD' },
+  { tv: 'FX:USDJPY', label: 'USD/JPY' },
+  { tv: 'FX:AUDUSD', label: 'AUD/USD' },
+  { tv: 'FX:USDCAD', label: 'USD/CAD' },
+  { tv: 'FX:USDCHF', label: 'USD/CHF' },
+  { tv: 'OANDA:XAUUSD', label: 'Gold' },
+  { tv: 'BITSTAMP:BTCUSD', label: 'Bitcoin' },
+];
 
 export default function SentimentPage() {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['sentiment'],
-    queryFn: () => apiGet<any>('/sentiment'),
-  });
-
-  const symbols = data?.symbols || [];
+  const [view, setView] = useState<'grid' | 'detail'>('grid');
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Retail Sentiment</h1>
-      <p className="text-gray-400">
-        Myfxbook community outlook. Contrarian signal — extreme positioning often precedes reversals.
-      </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-gray-100">Market Sentiment</h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Technical sentiment across major pairs — oscillators + moving averages
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => setView('grid')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              view === 'grid' ? 'bg-blue-500 text-white' : 'bg-[#1c2530] text-gray-400'
+            }`}
+          >
+            Grid
+          </button>
+          <button
+            onClick={() => setView('detail')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+              view === 'detail' ? 'bg-blue-500 text-white' : 'bg-[#1c2530] text-gray-400'
+            }`}
+          >
+            Detail
+          </button>
+        </div>
+      </div>
 
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : error ? (
-        <div className="text-red-400">Failed to load sentiment data</div>
+      {view === 'grid' ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {PAIRS.map((pair) => (
+            <div
+              key={pair.tv}
+              className="bg-[#151c24] rounded-lg border border-[#243040] overflow-hidden"
+            >
+              <div className="px-3 py-2 border-b border-[#243040]">
+                <span className="text-sm font-semibold text-gray-200">{pair.label}</span>
+              </div>
+              <TechnicalAnalysis symbol={pair.tv} interval="1D" height={280} />
+            </div>
+          ))}
+        </div>
       ) : (
-        <div className="grid gap-4">
-          {symbols.map((item: any) => (
-            <div key={item.symbol} className="bg-dark-800 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-lg">{item.symbol}</span>
-                <span className="text-xs text-gray-500">{item.source}</span>
+        <div className="space-y-4">
+          {PAIRS.map((pair) => (
+            <div
+              key={pair.tv}
+              className="bg-[#151c24] rounded-lg border border-[#243040] overflow-hidden"
+            >
+              <div className="px-4 py-3 border-b border-[#243040]">
+                <span className="text-sm font-bold text-gray-200">{pair.label}</span>
               </div>
-              <SentimentBar pctLong={item.pct_long} pctShort={item.pct_short} />
-              <div className="flex justify-between mt-2 text-sm">
-                <span className="text-accent-green">Long: {item.pct_long?.toFixed(1)}%</span>
-                <span className="text-accent-red">Short: {item.pct_short?.toFixed(1)}%</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+                <MiniChart symbol={pair.tv} height={200} dateRange="1M" />
+                <TechnicalAnalysis symbol={pair.tv} interval="1D" height={200} />
               </div>
-              {(item.pct_long >= 70 || item.pct_long <= 30) && (
-                <div className={`mt-2 text-xs font-semibold px-2 py-1 rounded inline-block ${
-                  item.pct_long >= 70 ? 'bg-red-900/50 text-red-300' : 'bg-green-900/50 text-green-300'
-                }`}>
-                  {item.pct_long >= 70 ? 'EXTREME LONG — Bearish Signal' : 'EXTREME SHORT — Bullish Signal'}
-                </div>
-              )}
             </div>
           ))}
         </div>

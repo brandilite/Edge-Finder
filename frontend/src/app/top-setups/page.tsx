@@ -1,107 +1,74 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { apiGet } from '@/lib/api';
-import { ScorecardItem } from '@/hooks/useScorecard';
-import { ASSET_CLASSES, AssetClass } from '@/lib/constants';
-import ScoreBadge from '@/components/shared/ScoreBadge';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import Link from 'next/link';
+import { useState } from 'react';
+import Screener from '@/components/tv/Screener';
+import TechnicalAnalysis from '@/components/tv/TechnicalAnalysis';
+import MiniChart from '@/components/tv/MiniChart';
 
-interface ScorecardResponse {
-  asset_class: string;
-  scorecards: ScorecardItem[];
-}
+const TOP_SYMBOLS = [
+  { tv: 'FX:EURUSD', label: 'EUR/USD' },
+  { tv: 'FX:GBPUSD', label: 'GBP/USD' },
+  { tv: 'FX:USDJPY', label: 'USD/JPY' },
+  { tv: 'FX:AUDUSD', label: 'AUD/USD' },
+  { tv: 'OANDA:XAUUSD', label: 'Gold' },
+  { tv: 'BITSTAMP:BTCUSD', label: 'Bitcoin' },
+  { tv: 'FOREXCOM:SPXUSD', label: 'S&P 500' },
+  { tv: 'TVC:USOIL', label: 'Oil' },
+];
 
 export default function TopSetupsPage() {
-  const { data: allScorecards, isLoading, error } = useQuery({
-    queryKey: ['all-scorecards'],
-    queryFn: async () => {
-      const results = await Promise.all(
-        ASSET_CLASSES.map((ac) =>
-          apiGet<ScorecardResponse>(`/scorecard/${ac}`).catch(() => ({
-            asset_class: ac,
-            scorecards: [],
-          }))
-        )
-      );
-      return results.flatMap((r) =>
-        r.scorecards.map((s) => ({ ...s, asset_class: r.asset_class }))
-      );
-    },
-    staleTime: 60_000,
-  });
-
-  const sorted = allScorecards
-    ? [...allScorecards].sort((a, b) => Math.abs(b.total_score) - Math.abs(a.total_score))
-    : [];
-
-  const topBullish = sorted.filter((s) => s.total_score > 0).slice(0, 10);
-  const topBearish = sorted.filter((s) => s.total_score < 0).slice(0, 10);
-
-  if (isLoading) return <LoadingSpinner />;
-
-  if (error) {
-    return (
-      <div className="bg-accent-red/10 border border-accent-red/20 rounded-lg p-4 text-sm text-accent-red">
-        Failed to load setups.
-      </div>
-    );
-  }
-
-  const renderTable = (items: (ScorecardItem & { asset_class: string })[], title: string) => (
-    <div className="bg-dark-800 border border-dark-600 rounded-lg overflow-hidden">
-      <div className="px-4 py-3 border-b border-dark-600">
-        <h2 className="text-sm font-bold text-gray-200">{title}</h2>
-      </div>
-      <table className="w-full text-sm">
-        <thead>
-          <tr className="border-b border-dark-700">
-            <th className="text-left py-2.5 px-4 text-gray-400 font-medium">#</th>
-            <th className="text-left py-2.5 px-4 text-gray-400 font-medium">Symbol</th>
-            <th className="text-right py-2.5 px-4 text-gray-400 font-medium">Score</th>
-            <th className="text-center py-2.5 px-4 text-gray-400 font-medium">Direction</th>
-            <th className="text-left py-2.5 px-4 text-gray-400 font-medium">Class</th>
-          </tr>
-        </thead>
-        <tbody>
-          {items.map((item, i) => (
-            <tr key={item.symbol} className="border-b border-dark-700 hover:bg-dark-700 transition-colors">
-              <td className="py-2.5 px-4 text-gray-500">{i + 1}</td>
-              <td className="py-2.5 px-4">
-                <Link href={`/scorecard/${item.symbol}`} className="text-gray-200 font-medium hover:text-accent-blue transition-colors">
-                  {item.symbol}
-                </Link>
-              </td>
-              <td className={`py-2.5 px-4 text-right font-bold ${item.total_score > 0 ? 'text-accent-green' : 'text-accent-red'}`}>
-                {item.total_score > 0 ? '+' : ''}{item.total_score}
-              </td>
-              <td className="py-2.5 px-4 text-center">
-                <ScoreBadge direction={item.direction} size="sm" />
-              </td>
-              <td className="py-2.5 px-4 text-gray-400 capitalize">{item.asset_class}</td>
-            </tr>
-          ))}
-          {items.length === 0 && (
-            <tr>
-              <td colSpan={5} className="py-8 text-center text-gray-500">No setups found</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
+  const [selected, setSelected] = useState(TOP_SYMBOLS[0]);
 
   return (
-    <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-bold text-gray-100">Top Setups</h1>
-        <p className="text-sm text-gray-500 mt-1">Strongest trading setups across all asset classes</p>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-xl font-bold text-gray-100">Scorecard / Top Setups</h1>
+        <p className="text-sm text-gray-500 mt-1">Technical scorecard overview with multi-timeframe analysis</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {renderTable(topBullish, 'Top Bullish Setups')}
-        {renderTable(topBearish, 'Top Bearish Setups')}
+      <div className="flex flex-wrap gap-2">
+        {TOP_SYMBOLS.map((s) => (
+          <button
+            key={s.tv}
+            onClick={() => setSelected(s)}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              selected.tv === s.tv
+                ? 'bg-blue-500 text-white'
+                : 'bg-[#1c2530] text-gray-400 hover:text-gray-200'
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2">
+          <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+            <MiniChart symbol={selected.tv} height={300} dateRange="3M" />
+          </div>
+        </div>
+        <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+          <TechnicalAnalysis symbol={selected.tv} interval="1D" height={300} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+        {['1m', '15m', '1h', '1W'].map((tf) => (
+          <div key={tf} className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+            <div className="px-3 py-2 border-b border-[#243040] text-xs font-semibold text-gray-400 uppercase">
+              {tf}
+            </div>
+            <TechnicalAnalysis symbol={selected.tv} interval={tf} height={250} />
+          </div>
+        ))}
+      </div>
+
+      <div>
+        <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Forex Screener</h2>
+        <div className="rounded-lg border border-[#243040] overflow-hidden">
+          <Screener height={400} market="forex" defaultScreen="most_volatile" />
+        </div>
       </div>
     </div>
   );

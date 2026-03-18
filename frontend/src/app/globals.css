@@ -2,18 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+}
+
 body {
-  @apply bg-dark-900 text-gray-100;
+  background-color: #0f1419;
+  color: #e5e7eb;
+  margin: 0;
+  padding: 0;
 }
 
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  @apply bg-dark-900;
+  background: #0f1419;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-dark-600 rounded-full;
+  background: #243040;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2d3d52;
 }
 
 @layer utilities {
@@ -21,4 +33,13 @@ body {
     scrollbar-width: thin;
     scrollbar-color: #243040 #0f1419;
   }
+}
+
+/* TradingView widget overrides */
+.tradingview-widget-container {
+  position: relative;
+}
+
+.tradingview-widget-copyright {
+  display: none !important;
 }

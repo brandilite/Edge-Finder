@@ -1,47 +1,71 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { apiGet } from '@/lib/api';
-import { COTTable } from '@/components/cot/COTTable';
-import { COTChart } from '@/components/cot/COTChart';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import AdvancedChart from '@/components/tv/AdvancedChart';
+import TechnicalAnalysis from '@/components/tv/TechnicalAnalysis';
+import Timeline from '@/components/tv/Timeline';
+
+const COT_SYMBOLS = [
+  { tv: 'FX:EURUSD', label: 'EUR/USD', cot: 'Euro FX' },
+  { tv: 'FX:GBPUSD', label: 'GBP/USD', cot: 'British Pound' },
+  { tv: 'FX:USDJPY', label: 'USD/JPY', cot: 'Japanese Yen' },
+  { tv: 'FX:AUDUSD', label: 'AUD/USD', cot: 'Australian Dollar' },
+  { tv: 'FX:USDCAD', label: 'USD/CAD', cot: 'Canadian Dollar' },
+  { tv: 'OANDA:XAUUSD', label: 'Gold', cot: 'Gold' },
+  { tv: 'OANDA:XAGUSD', label: 'Silver', cot: 'Silver' },
+  { tv: 'TVC:USOIL', label: 'Crude Oil', cot: 'Crude Oil' },
+];
 
 export default function COTPage() {
-  const [selectedSymbol, setSelectedSymbol] = useState<string | null>(null);
-
-  const { data: cotData, isLoading } = useQuery({
-    queryKey: ['cot-all'],
-    queryFn: () => apiGet<any>('/cot'),
-  });
-
-  const { data: historyData } = useQuery({
-    queryKey: ['cot-history', selectedSymbol],
-    queryFn: () => apiGet<any>(`/cot/${selectedSymbol}`),
-    enabled: !!selectedSymbol,
-  });
+  const [selected, setSelected] = useState(COT_SYMBOLS[0]);
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">COT Analysis</h1>
-      <p className="text-gray-400">Commitment of Traders data from CFTC. Updated weekly.</p>
+      <div>
+        <h1 className="text-xl font-bold text-gray-100">COT Analysis</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Commitment of Traders positioning context — chart + technical + news
+        </p>
+      </div>
 
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <COTTable
-          data={cotData?.symbols || {}}
-          onSelectSymbol={setSelectedSymbol}
-          selectedSymbol={selectedSymbol}
-        />
-      )}
+      <div className="flex flex-wrap gap-2">
+        {COT_SYMBOLS.map((s) => (
+          <button
+            key={s.tv}
+            onClick={() => setSelected(s)}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+              selected.tv === s.tv
+                ? 'bg-blue-500 text-white'
+                : 'bg-[#1c2530] text-gray-400 hover:text-gray-200'
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
 
-      {selectedSymbol && historyData && (
-        <div className="bg-dark-800 rounded-lg p-6">
-          <h2 className="text-lg font-semibold mb-4">{selectedSymbol} - COT History</h2>
-          <COTChart data={historyData.history || []} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="lg:col-span-2">
+          <AdvancedChart symbol={selected.tv} height={450} interval="W" />
         </div>
-      )}
+        <div className="space-y-4">
+          <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+            <TechnicalAnalysis symbol={selected.tv} interval="1W" height={250} />
+          </div>
+          <div className="rounded-lg border border-[#243040] overflow-hidden">
+            <Timeline height={250} feedMode="all_symbols" market="forex" />
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-[#151c24] rounded-lg border border-[#243040] p-4">
+        <p className="text-sm text-gray-400">
+          <span className="text-gray-200 font-semibold">COT Data Note:</span>{' '}
+          CFTC Commitment of Traders reports are released weekly (Fridays 3:30 PM ET).
+          Use the weekly chart above to correlate institutional positioning with price action.
+          The TradingView COT indicator can be added via the chart&apos;s indicator menu (search &quot;COT&quot;).
+        </p>
+      </div>
     </div>
   );
 }

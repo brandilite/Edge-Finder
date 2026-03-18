@@ -1,103 +1,91 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { apiGet } from '@/lib/api';
-import { FOREX_SYMBOLS, COMMODITY_SYMBOLS, INDEX_SYMBOLS, CRYPTO_SYMBOLS } from '@/lib/constants';
-import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from 'recharts';
+import AdvancedChart from '@/components/tv/AdvancedChart';
+import MiniChart from '@/components/tv/MiniChart';
+import TechnicalAnalysis from '@/components/tv/TechnicalAnalysis';
 
-const ALL_SYMBOLS = [...FOREX_SYMBOLS, ...COMMODITY_SYMBOLS, ...INDEX_SYMBOLS, ...CRYPTO_SYMBOLS];
-const MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const SYMBOLS = [
+  { tv: 'FX:EURUSD', label: 'EUR/USD' },
+  { tv: 'FX:GBPUSD', label: 'GBP/USD' },
+  { tv: 'FX:USDJPY', label: 'USD/JPY' },
+  { tv: 'OANDA:XAUUSD', label: 'Gold' },
+  { tv: 'BITSTAMP:BTCUSD', label: 'Bitcoin' },
+  { tv: 'FOREXCOM:SPXUSD', label: 'S&P 500' },
+  { tv: 'TVC:USOIL', label: 'Crude Oil' },
+];
+
+const RANGES = [
+  { label: '1M', value: '1M' },
+  { label: '3M', value: '3M' },
+  { label: '6M', value: '6M' },
+  { label: '1Y', value: '12M' },
+  { label: '5Y', value: '60M' },
+  { label: 'All', value: 'ALL' },
+];
 
 export default function SeasonalityPage() {
-  const [symbol, setSymbol] = useState('EURUSD');
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['seasonality', symbol],
-    queryFn: () => apiGet<any>(`/seasonality/${symbol}`),
-  });
-
-  const months = (data?.months || []).map((m: any) => ({
-    ...m,
-    name: MONTH_NAMES[m.month - 1],
-  }));
+  const [selected, setSelected] = useState(SYMBOLS[0]);
+  const [range, setRange] = useState('12M');
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Seasonality</h1>
+      <div>
+        <h1 className="text-xl font-bold text-gray-100">Seasonality</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Historical price patterns and seasonal trends
+        </p>
+      </div>
 
-      <select
-        value={symbol}
-        onChange={(e) => setSymbol(e.target.value)}
-        className="bg-dark-700 border border-dark-600 rounded-lg px-4 py-2 text-white"
-      >
-        {ALL_SYMBOLS.map((s) => (
-          <option key={s} value={s}>{s}</option>
-        ))}
-      </select>
+      <div className="flex flex-wrap items-center gap-4">
+        <div className="flex flex-wrap gap-2">
+          {SYMBOLS.map((s) => (
+            <button
+              key={s.tv}
+              onClick={() => setSelected(s)}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                selected.tv === s.tv
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-[#1c2530] text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-1">
+          {RANGES.map((r) => (
+            <button
+              key={r.value}
+              onClick={() => setRange(r.value)}
+              className={`px-2 py-1 rounded text-xs font-medium transition-colors ${
+                range === r.value
+                  ? 'bg-cyan-500/20 text-cyan-400'
+                  : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              {r.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
-      {isLoading ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-          <div className="bg-dark-800 rounded-lg p-6">
-            <h2 className="text-lg font-semibold mb-4">Average Monthly Return (%)</h2>
-            <div className="h-72">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={months}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#243040" />
-                  <XAxis dataKey="name" tick={{ fill: '#9ca3af', fontSize: 12 }} />
-                  <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: '#1c2530', border: '1px solid #243040', borderRadius: 8 }}
-                  />
-                  <Bar dataKey="avg_return" radius={[4, 4, 0, 0]}>
-                    {months.map((m: any, i: number) => (
-                      <Cell key={i} fill={m.avg_return >= 0 ? '#22c55e' : '#ef4444'} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+      <AdvancedChart symbol={selected.tv} height={500} interval="M" />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+          <div className="px-3 py-2 border-b border-[#243040]">
+            <span className="text-xs font-semibold text-gray-400 uppercase">Weekly View</span>
           </div>
-
-          <div className="bg-dark-800 rounded-lg overflow-hidden">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-dark-600 text-gray-400">
-                  <th className="text-left p-3">Month</th>
-                  <th className="text-right p-3">Avg Return</th>
-                  <th className="text-right p-3">Median</th>
-                  <th className="text-right p-3">Win Rate</th>
-                  <th className="text-right p-3">Best</th>
-                  <th className="text-right p-3">Worst</th>
-                  <th className="text-right p-3">Years</th>
-                </tr>
-              </thead>
-              <tbody>
-                {months.map((m: any) => (
-                  <tr key={m.month} className="border-b border-dark-700">
-                    <td className="p-3 font-medium">{m.name}</td>
-                    <td className={`p-3 text-right ${m.avg_return >= 0 ? 'text-accent-green' : 'text-accent-red'}`}>
-                      {m.avg_return?.toFixed(2)}%
-                    </td>
-                    <td className="p-3 text-right text-gray-300">{m.median_return?.toFixed(2)}%</td>
-                    <td className={`p-3 text-right font-semibold ${
-                      m.win_rate >= 60 ? 'text-accent-green' : m.win_rate <= 40 ? 'text-accent-red' : 'text-gray-300'
-                    }`}>
-                      {m.win_rate?.toFixed(0)}%
-                    </td>
-                    <td className="p-3 text-right text-accent-green">{m.best_return?.toFixed(2)}%</td>
-                    <td className="p-3 text-right text-accent-red">{m.worst_return?.toFixed(2)}%</td>
-                    <td className="p-3 text-right text-gray-500">{m.years}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <MiniChart symbol={selected.tv} height={250} dateRange={range} />
+        </div>
+        <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+          <div className="px-3 py-2 border-b border-[#243040]">
+            <span className="text-xs font-semibold text-gray-400 uppercase">Monthly Technical</span>
           </div>
-        </>
-      )}
+          <TechnicalAnalysis symbol={selected.tv} interval="1M" height={250} />
+        </div>
+      </div>
     </div>
   );
 }

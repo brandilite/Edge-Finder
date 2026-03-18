@@ -1,47 +1,86 @@
 'use client';
 
 import { useState } from 'react';
-import { FOREX_SYMBOLS, COMMODITY_SYMBOLS, INDEX_SYMBOLS, CRYPTO_SYMBOLS } from '@/lib/constants';
 import { useLLMChat } from '@/hooks/useLLMChat';
 import { ChatWindow } from '@/components/llm/ChatWindow';
 import { ChatInput } from '@/components/llm/ChatInput';
+import AdvancedChart from '@/components/tv/AdvancedChart';
+import TechnicalAnalysis from '@/components/tv/TechnicalAnalysis';
 import { Bot } from 'lucide-react';
 
-const ALL_SYMBOLS = ['', ...FOREX_SYMBOLS, ...COMMODITY_SYMBOLS, ...INDEX_SYMBOLS, ...CRYPTO_SYMBOLS];
+const SYMBOLS = [
+  { tv: 'FX:EURUSD', label: 'EUR/USD' },
+  { tv: 'FX:GBPUSD', label: 'GBP/USD' },
+  { tv: 'FX:USDJPY', label: 'USD/JPY' },
+  { tv: 'OANDA:XAUUSD', label: 'Gold' },
+  { tv: 'BITSTAMP:BTCUSD', label: 'Bitcoin' },
+  { tv: 'FOREXCOM:SPXUSD', label: 'S&P 500' },
+  { tv: 'TVC:USOIL', label: 'Crude Oil' },
+];
 
 export default function AnalysisPage() {
-  const [contextSymbol, setContextSymbol] = useState('');
-  const { messages, sendMessage, isLoading, conversationId } = useLLMChat();
+  const [contextSymbol, setContextSymbol] = useState(SYMBOLS[0].tv);
+  const { messages, sendMessage, isLoading, clearChat } = useLLMChat();
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)]">
-      <div className="flex items-center justify-between mb-4">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Bot className="text-accent-cyan" size={28} />
+          <Bot className="text-cyan-400" size={24} />
           <div>
-            <h1 className="text-2xl font-bold">AI Analysis</h1>
-            <p className="text-sm text-gray-400">Powered by Claude — ask about any market, setup, or analysis</p>
+            <h1 className="text-xl font-bold text-gray-100">AI Analysis</h1>
+            <p className="text-sm text-gray-500">Ask Claude about any market, setup, or technical analysis</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3">
+          <select
+            value={contextSymbol}
+            onChange={(e) => setContextSymbol(e.target.value)}
+            className="bg-[#1c2530] border border-[#243040] rounded-lg px-3 py-2 text-sm text-white"
+          >
+            {SYMBOLS.map((s) => (
+              <option key={s.tv} value={s.tv}>{s.label}</option>
+            ))}
+          </select>
+          <button
+            onClick={clearChat}
+            className="px-3 py-2 text-sm bg-[#1c2530] text-gray-400 hover:text-white rounded-lg border border-[#243040] transition-colors"
+          >
+            Clear
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Chart + Technical sidebar */}
+        <div className="lg:col-span-2 space-y-4">
+          <AdvancedChart symbol={contextSymbol} height={400} />
+          <div className="grid grid-cols-3 gap-3">
+            <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+              <TechnicalAnalysis symbol={contextSymbol} interval="1m" height={250} />
+            </div>
+            <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+              <TechnicalAnalysis symbol={contextSymbol} interval="1h" height={250} />
+            </div>
+            <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+              <TechnicalAnalysis symbol={contextSymbol} interval="1D" height={250} />
+            </div>
           </div>
         </div>
 
-        <select
-          value={contextSymbol}
-          onChange={(e) => setContextSymbol(e.target.value)}
-          className="bg-dark-700 border border-dark-600 rounded-lg px-3 py-2 text-sm text-white"
-        >
-          <option value="">No symbol context</option>
-          {ALL_SYMBOLS.filter(Boolean).map((s) => (
-            <option key={s} value={s}>{s}</option>
-          ))}
-        </select>
-      </div>
-
-      <div className="flex-1 bg-dark-800 rounded-lg overflow-hidden flex flex-col">
-        <ChatWindow messages={messages} isLoading={isLoading} />
-        <ChatInput
-          onSend={(msg) => sendMessage(msg, contextSymbol || undefined)}
-          isLoading={isLoading}
-        />
+        {/* Chat */}
+        <div className="flex flex-col bg-[#151c24] rounded-lg border border-[#243040] overflow-hidden" style={{ height: 'calc(100vh - 160px)' }}>
+          <div className="px-4 py-3 border-b border-[#243040] bg-[#1c2530]">
+            <span className="text-sm font-semibold text-gray-300">Chat with AI</span>
+          </div>
+          <div className="flex-1 overflow-hidden flex flex-col">
+            <ChatWindow messages={messages} isLoading={isLoading} />
+            <ChatInput
+              onSend={(msg) => sendMessage(msg, contextSymbol || undefined)}
+              isLoading={isLoading}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
