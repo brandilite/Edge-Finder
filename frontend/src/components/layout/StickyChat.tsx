@@ -12,7 +12,6 @@ export default function StickyChat() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (input.trim()) {
-      // Navigate to analysis page with query
       router.push(`/analysis?q=${encodeURIComponent(input.trim())}`);
       setInput('');
     }
@@ -28,13 +27,11 @@ export default function StickyChat() {
   return (
     <div className="fixed bottom-0 right-0 z-30 pointer-events-none" style={{ left: 'var(--sidebar-width, 240px)' }}>
       <div className="pointer-events-auto">
-        {/* Gradient fade above the input */}
-        <div className="h-8 bg-gradient-to-t from-[#0f1419] to-transparent" />
-
-        <div className="bg-[#0f1419] px-4 pb-4">
+        <div className="h-8 bg-gradient-to-t from-black to-transparent" />
+        <div className="bg-black px-4 pb-4">
           <form
             onSubmit={handleSubmit}
-            className="max-w-3xl mx-auto flex items-center gap-2 bg-[#1a1f2e] border border-[#2a2f3a] rounded-xl px-4 py-2.5 chat-backdrop hover:border-[#3a4050] transition-colors"
+            className="max-w-3xl mx-auto flex items-center gap-2 bg-[#0a0a0a] border border-[#1a1a1a] rounded-xl px-4 py-2.5 chat-backdrop hover:border-[#333333] transition-colors"
           >
             <button
               type="button"
@@ -56,8 +53,8 @@ export default function StickyChat() {
               className={clsx(
                 'p-1.5 rounded-lg transition-colors flex-shrink-0',
                 input.trim()
-                  ? 'bg-blue-500 text-white hover:bg-blue-400'
-                  : 'bg-[#2a2f3a] text-gray-500'
+                  ? 'bg-[#015608] text-white hover:bg-[#016a0a]'
+                  : 'bg-[#1a1a1a] text-gray-500'
               )}
             >
               <ArrowUp size={14} />
@@ -71,4 +68,3 @@ export default function StickyChat() {
     </div>
   );
 }
-

@@ -9,14 +9,18 @@ const config: Config = {
     extend: {
       colors: {
         dark: {
-          900: '#0f1419',
-          800: '#151c24',
-          700: '#1c2530',
-          600: '#243040',
+          900: '#000000',
+          800: '#0a0a0a',
+          700: '#111111',
+          600: '#1a1a1a',
+        },
+        brand: {
+          green: '#015608',
+          black: '#000000',
+          white: '#ffffff',
         },
         accent: {
-          blue: '#3b82f6',
-          green: '#22c55e',
+          green: '#015608',
           red: '#ef4444',
           yellow: '#eab308',
           cyan: '#06b6d4',

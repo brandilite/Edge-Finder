@@ -27,7 +27,7 @@ export default function AdvancedChart({
       theme: 'dark',
       style: '1',
       locale: 'en',
-      backgroundColor: '#0f1419',
+      backgroundColor: '#000000',
       gridColor: 'rgba(36, 48, 64, 0.6)',
       allow_symbol_change: allowSymbolChange,
       hide_side_toolbar: !showDrawingToolbar,

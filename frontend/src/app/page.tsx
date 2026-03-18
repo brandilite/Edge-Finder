@@ -30,13 +30,13 @@ export default function DashboardPage() {
             </h2>
             <Link
               href="/heatmap"
-              className="flex items-center gap-1 text-[12px] text-blue-400 hover:text-blue-300 transition-colors"
+              className="flex items-center gap-1 text-[12px] text-[#22c55e] hover:text-[#4ade80] transition-colors"
             >
               Expand
               <ArrowUpRight size={12} />
             </Link>
           </div>
-          <div className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden">
+          <div className="bg-[#0a0a0a] rounded-lg border border-[#1a1a1a] overflow-hidden">
             <StockHeatmap height={400} dataSource="SPX500" />
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function DashboardPage() {
           <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">
             Recent Developments
           </h2>
-          <div className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden">
+          <div className="bg-[#0a0a0a] rounded-lg border border-[#1a1a1a] overflow-hidden">
             <Timeline height={400} feedMode="all_symbols" market="stock" />
           </div>
         </div>

@@ -6,6 +6,7 @@ function getRedirectUrl() {
     return `${window.location.origin}/auth/callback`;
   }
   return `${process.env.NEXT_PUBLIC_SITE_URL || 'https://edge-finder-production-81b4.up.railway.app'}/auth/callback`;
+
 }
 
 export async function signInWithGoogle() {

@@ -7,14 +7,13 @@ export default function MarketSummary() {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden">
-      {/* Header */}
+    <div className="bg-[#0a0a0a] rounded-lg border border-[#1a1a1a] overflow-hidden">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-[#1f2937]/50 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-3.5 hover:bg-[#111111] transition-colors"
       >
         <div className="flex items-center gap-2">
-          <Sparkles size={15} className="text-blue-400" />
+          <Sparkles size={15} className="text-[#22c55e]" />
           <span className="text-sm font-semibold text-gray-200">Market Summary</span>
         </div>
         <div className="flex items-center gap-3">
@@ -22,15 +21,10 @@ export default function MarketSummary() {
             <Clock size={11} />
             <span>Updated 5m ago</span>
           </div>
-          {expanded ? (
-            <ChevronUp size={15} className="text-gray-500" />
-          ) : (
-            <ChevronDown size={15} className="text-gray-500" />
-          )}
+          {expanded ? <ChevronUp size={15} className="text-gray-500" /> : <ChevronDown size={15} className="text-gray-500" />}
         </div>
       </button>
 
-      {/* Content */}
       {expanded && (
         <div className="px-5 pb-4 space-y-3">
           <p className="text-[13px] text-gray-300 leading-relaxed">
@@ -53,7 +47,7 @@ export default function MarketSummary() {
                     key={tag}
                     className={`text-[11px] px-2 py-0.5 rounded-full border ${
                       isPositive
-                        ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
+                        ? 'text-[#22c55e] bg-[#015608]/10 border-[#015608]/20'
                         : 'text-red-400 bg-red-500/10 border-red-500/20'
                     }`}
                   >

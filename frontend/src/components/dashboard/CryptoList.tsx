@@ -22,19 +22,15 @@ const CRYPTOS: CryptoItem[] = [
 
 export default function CryptoList() {
   return (
-    <div className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden">
-      <div className="px-4 py-3 border-b border-[#2a2f3a]">
+    <div className="bg-[#0a0a0a] rounded-lg border border-[#1a1a1a] overflow-hidden">
+      <div className="px-4 py-3 border-b border-[#1a1a1a]">
         <h3 className="text-sm font-semibold text-gray-200">Popular Cryptocurrencies</h3>
       </div>
-      <div className="divide-y divide-[#2a2f3a]/50">
+      <div className="divide-y divide-[#1a1a1a]/50">
         {CRYPTOS.map((crypto) => {
           const isPositive = crypto.change.startsWith('+');
           return (
-            <div
-              key={crypto.symbol}
-              className="flex items-center gap-3 px-4 py-2 hover:bg-[#1f2937] transition-colors cursor-pointer"
-            >
-              {/* Crypto icon placeholder */}
+            <div key={crypto.symbol} className="flex items-center gap-3 px-4 py-2 hover:bg-[#111111] transition-colors cursor-pointer">
               <div
                 className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-[10px] font-bold text-white"
                 style={{ backgroundColor: crypto.color + '30', color: crypto.color }}
@@ -47,12 +43,7 @@ export default function CryptoList() {
               </div>
               <div className="text-right flex-shrink-0">
                 <div className="text-[13px] font-medium text-gray-200">{crypto.price}</div>
-                <div
-                  className={clsx(
-                    'text-[11px] font-medium',
-                    isPositive ? 'text-emerald-400' : 'text-red-400'
-                  )}
-                >
+                <div className={clsx('text-[11px] font-medium', isPositive ? 'text-[#22c55e]' : 'text-red-400')}>
                   {crypto.change}
                 </div>
               </div>

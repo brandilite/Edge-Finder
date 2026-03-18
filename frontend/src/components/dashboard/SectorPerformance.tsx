@@ -23,37 +23,25 @@ const SECTORS: Sector[] = [
 
 export default function SectorPerformance() {
   return (
-    <div className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden">
-      <div className="px-4 py-3 border-b border-[#2a2f3a]">
+    <div className="bg-[#0a0a0a] rounded-lg border border-[#1a1a1a] overflow-hidden">
+      <div className="px-4 py-3 border-b border-[#1a1a1a]">
         <h3 className="text-sm font-semibold text-gray-200">Equity Sectors</h3>
       </div>
-      <div className="divide-y divide-[#2a2f3a]/50">
+      <div className="divide-y divide-[#1a1a1a]/50">
         {SECTORS.map((sector) => {
           const isPositive = sector.change.startsWith('+');
           const absPct = parseFloat(sector.change.replace(/[+%]/g, ''));
           return (
-            <div
-              key={sector.name}
-              className="flex items-center justify-between px-4 py-2 hover:bg-[#1f2937] transition-colors cursor-pointer"
-            >
+            <div key={sector.name} className="flex items-center justify-between px-4 py-2 hover:bg-[#111111] transition-colors cursor-pointer">
               <span className="text-[13px] text-gray-300">{sector.name}</span>
               <div className="flex items-center gap-2">
-                {/* Mini bar */}
-                <div className="w-16 h-1.5 rounded-full bg-[#2a2f3a] overflow-hidden">
+                <div className="w-16 h-1.5 rounded-full bg-[#1a1a1a] overflow-hidden">
                   <div
-                    className={clsx(
-                      'h-full rounded-full',
-                      isPositive ? 'bg-emerald-500' : 'bg-red-500'
-                    )}
+                    className={clsx('h-full rounded-full', isPositive ? 'bg-[#015608]' : 'bg-red-500')}
                     style={{ width: `${Math.min(absPct * 40, 100)}%` }}
                   />
                 </div>
-                <span
-                  className={clsx(
-                    'text-[12px] font-medium min-w-[52px] text-right',
-                    isPositive ? 'text-emerald-400' : 'text-red-400'
-                  )}
-                >
+                <span className={clsx('text-[12px] font-medium min-w-[52px] text-right', isPositive ? 'text-[#22c55e]' : 'text-red-400')}>
                   {sector.change}
                 </span>
               </div>

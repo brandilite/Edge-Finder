@@ -19,7 +19,7 @@ export default function ForexHeatmap({ height = 500, currencies }: ForexHeatmapP
       isTransparent: true,
       colorTheme: 'dark',
       locale: 'en',
-      backgroundColor: '#0f1419',
+      backgroundColor: '#000000',
     }),
     [height, currencies]
   );

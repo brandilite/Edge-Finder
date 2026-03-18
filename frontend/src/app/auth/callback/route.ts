@@ -20,6 +20,7 @@ function getSiteOrigin(request: NextRequest): string {
     return `https://${host}`;
   }
   return process.env.NEXT_PUBLIC_SITE_URL || 'https://edge-finder-production-81b4.up.railway.app';
+
 }
 
 export async function GET(request: NextRequest) {

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Star, Plus } from 'lucide-react';
 import clsx from 'clsx';
+import Link from 'next/link';
 
 interface WatchlistItem {
   symbol: string;
@@ -35,32 +36,20 @@ export default function WatchlistSidebar() {
   };
 
   return (
-    <div className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-[#2a2f3a]">
+    <div className="bg-[#0a0a0a] rounded-lg border border-[#1a1a1a] overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[#1a1a1a]">
         <h3 className="text-sm font-semibold text-gray-200">Watchlist</h3>
-        <button className="p-1 rounded-md hover:bg-[#2a2f3a] text-gray-400 hover:text-gray-200 transition-colors">
+        <Link href="/watchlist" className="p-1 rounded-md hover:bg-[#1a1a1a] text-gray-400 hover:text-gray-200 transition-colors">
           <Plus size={14} />
-        </button>
+        </Link>
       </div>
-      <div className="divide-y divide-[#2a2f3a]/50">
+      <div className="divide-y divide-[#1a1a1a]/50">
         {items.map((item) => {
           const isPositive = item.change.startsWith('+');
           return (
-            <div
-              key={item.symbol}
-              className="flex items-center gap-2 px-4 py-2 hover:bg-[#1f2937] transition-colors cursor-pointer"
-            >
-              <button
-                onClick={() => toggleStar(item.symbol)}
-                className="flex-shrink-0"
-              >
-                <Star
-                  size={13}
-                  className={clsx(
-                    'transition-colors',
-                    item.starred ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'
-                  )}
-                />
+            <div key={item.symbol} className="flex items-center gap-2 px-4 py-2 hover:bg-[#111111] transition-colors cursor-pointer">
+              <button onClick={() => toggleStar(item.symbol)} className="flex-shrink-0">
+                <Star size={13} className={clsx('transition-colors', item.starred ? 'text-[#015608] fill-[#015608]' : 'text-gray-600')} />
               </button>
               <div className="flex-1 min-w-0">
                 <span className="text-[13px] font-medium text-gray-200">{item.symbol}</span>
@@ -68,12 +57,7 @@ export default function WatchlistSidebar() {
               </div>
               <div className="text-right flex-shrink-0">
                 <div className="text-[13px] font-medium text-gray-200">${item.price}</div>
-                <div
-                  className={clsx(
-                    'text-[11px] font-medium',
-                    isPositive ? 'text-emerald-400' : 'text-red-400'
-                  )}
-                >
+                <div className={clsx('text-[11px] font-medium', isPositive ? 'text-[#22c55e]' : 'text-red-400')}>
                   {item.changePercent}
                 </div>
               </div>
@@ -81,7 +65,6 @@ export default function WatchlistSidebar() {
           );
         })}
       </div>
-      {/* Note: Will connect to useWatchlist hook for Supabase data */}
     </div>
   );
 }

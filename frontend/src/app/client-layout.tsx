@@ -22,7 +22,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <div
-      className="flex h-screen overflow-hidden bg-[#0f1419]"
+      className="flex h-screen overflow-hidden bg-black"
       style={{ '--sidebar-width': `${sidebarWidth}px` } as React.CSSProperties}
     >
       <Sidebar />

@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: #0f1419;
+  background-color: #000000;
   color: #e5e7eb;
   margin: 0;
   padding: 0;
@@ -22,17 +22,17 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2a2f3a;
+  background: #1a1a1a;
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3a4050;
+  background: #333333;
 }
 
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #2a2f3a transparent;
+    scrollbar-color: #1a1a1a transparent;
   }
   .scrollbar-none {
     scrollbar-width: none;
@@ -62,8 +62,8 @@ body {
   transition: background-color 150ms ease, border-color 150ms ease;
 }
 .card-hover:hover {
-  background-color: #1f2937;
-  border-color: #3a4050;
+  background-color: #111111;
+  border-color: #333333;
 }
 
 /* Tab active indicator */
@@ -77,7 +77,7 @@ body {
   left: 0;
   right: 0;
   height: 2px;
-  background: #3b82f6;
+  background: #015608;
   border-radius: 1px 1px 0 0;
 }
 
@@ -87,5 +87,5 @@ body {
 }
 
 /* Green/red change colors */
-.change-positive { color: #22c55e; }
+.change-positive { color: #015608; }
 .change-negative { color: #ef4444; }

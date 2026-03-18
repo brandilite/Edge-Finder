@@ -40,9 +40,8 @@ export default function GainersLosers() {
   const [tab, setTab] = useState<Tab>('gainers');
 
   return (
-    <div className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden">
-      {/* Tabs */}
-      <div className="flex border-b border-[#2a2f3a]">
+    <div className="bg-[#0a0a0a] rounded-lg border border-[#1a1a1a] overflow-hidden">
+      <div className="flex border-b border-[#1a1a1a]">
         {(['gainers', 'losers', 'active'] as Tab[]).map((t) => (
           <button
             key={t}
@@ -50,7 +49,7 @@ export default function GainersLosers() {
             className={clsx(
               'flex-1 text-[12px] font-medium py-2.5 transition-colors capitalize',
               tab === t
-                ? 'text-gray-100 border-b-2 border-blue-500 -mb-px'
+                ? 'text-white border-b-2 border-[#015608] -mb-px'
                 : 'text-gray-500 hover:text-gray-300'
             )}
           >
@@ -58,30 +57,18 @@ export default function GainersLosers() {
           </button>
         ))}
       </div>
-
-      {/* Table */}
-      <div className="divide-y divide-[#2a2f3a]/50">
+      <div className="divide-y divide-[#1a1a1a]/50">
         {MOCK_DATA[tab].map((row) => {
           const isPositive = row.change.startsWith('+');
           return (
-            <div
-              key={row.symbol}
-              className="flex items-center justify-between px-4 py-2 hover:bg-[#1f2937] transition-colors cursor-pointer"
-            >
+            <div key={row.symbol} className="flex items-center justify-between px-4 py-2 hover:bg-[#111111] transition-colors cursor-pointer">
               <div className="flex items-center gap-3">
                 <span className="text-[13px] font-medium text-gray-200 w-12">{row.symbol}</span>
-                {row.volume && (
-                  <span className="text-[11px] text-gray-500">Vol: {row.volume}</span>
-                )}
+                {row.volume && <span className="text-[11px] text-gray-500">Vol: {row.volume}</span>}
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-[13px] text-gray-300">${row.price}</span>
-                <span
-                  className={clsx(
-                    'text-[12px] font-medium min-w-[60px] text-right',
-                    isPositive ? 'text-emerald-400' : 'text-red-400'
-                  )}
-                >
+                <span className={clsx('text-[12px] font-medium min-w-[60px] text-right', isPositive ? 'text-[#22c55e]' : 'text-red-400')}>
                   {row.change}
                 </span>
               </div>

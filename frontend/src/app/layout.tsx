@@ -5,7 +5,7 @@ import Providers from './providers';
 import ClientLayout from './client-layout';
 
 export const metadata: Metadata = {
-  title: 'EdgeFinder | Trading Intelligence',
+  title: 'Reversals Club Platforms | Trading Intelligence',
   description: 'AI-powered trading analysis dashboard with real-time market data',
 };
 

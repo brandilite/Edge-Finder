@@ -39,8 +39,8 @@ export function COTChart({ data, symbol = '' }: Partial<COTChartProps> & { data:
           <YAxis tick={{ fill: '#9ca3af', fontSize: 11 }} />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#151c24',
-              border: '1px solid #243040',
+              backgroundColor: '#0a0a0a',
+              border: '1px solid #1a1a1a',
               borderRadius: '8px',
               color: '#e5e7eb',
             }}

@@ -20,7 +20,7 @@ export default function TopAssets() {
         {TOP_ASSETS.map((asset) => (
           <div
             key={asset.symbol}
-            className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden card-hover"
+            className="bg-[#0a0a0a] rounded-lg border border-[#1a1a1a] overflow-hidden card-hover"
           >
             <MiniChart symbol={asset.symbol} height={140} dateRange="1M" />
           </div>

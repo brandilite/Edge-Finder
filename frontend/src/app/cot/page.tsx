@@ -22,7 +22,7 @@ export default function COTPage() {
   return (
     <div className="p-5 space-y-6">
       <div>
-        <h1 className="text-lg font-semibold text-gray-100">COT Analysis</h1>
+        <h1 className="text-lg font-semibold text-white">COT Analysis</h1>
         <p className="text-sm text-gray-500 mt-1">
           Commitment of Traders positioning context — chart + technical + news
         </p>
@@ -35,8 +35,8 @@ export default function COTPage() {
             onClick={() => setSelected(s)}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               selected.tv === s.tv
-                ? 'bg-blue-500 text-white'
-                : 'bg-[#1f2937] text-gray-400 hover:text-gray-200'
+                ? 'bg-[#015608] text-white'
+                : 'bg-[#111111] text-gray-400 hover:text-gray-200'
             }`}
           >
             {s.label}
@@ -49,16 +49,16 @@ export default function COTPage() {
           <AdvancedChart symbol={selected.tv} height={450} interval="W" />
         </div>
         <div className="p-5 space-y-4">
-          <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
+          <div className="rounded-lg border border-[#1a1a1a] overflow-hidden bg-[#0a0a0a]">
             <TechnicalAnalysis symbol={selected.tv} interval="1W" height={250} />
           </div>
-          <div className="rounded-lg border border-[#2a2f3a] overflow-hidden">
+          <div className="rounded-lg border border-[#1a1a1a] overflow-hidden">
             <Timeline height={250} feedMode="all_symbols" market="forex" />
           </div>
         </div>
       </div>
 
-      <div className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] p-4">
+      <div className="bg-[#0a0a0a] rounded-lg border border-[#1a1a1a] p-4">
         <p className="text-sm text-gray-400">
           <span className="text-gray-200 font-semibold">COT Data Note:</span>{' '}
           CFTC Commitment of Traders reports are released weekly (Fridays 3:30 PM ET).

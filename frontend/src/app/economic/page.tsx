@@ -6,13 +6,13 @@ export default function EconomicPage() {
   return (
     <div className="p-5 space-y-4">
       <div>
-        <h1 className="text-lg font-semibold text-gray-100">Economic Calendar</h1>
+        <h1 className="text-lg font-semibold text-white">Economic Calendar</h1>
         <p className="text-sm text-gray-500 mt-1">
           Upcoming economic events, releases, and their impact — powered by TradingView
         </p>
       </div>
 
-      <div className="rounded-lg border border-[#2a2f3a] overflow-hidden">
+      <div className="rounded-lg border border-[#1a1a1a] overflow-hidden">
         <EconomicCalendar
           height={typeof window !== 'undefined' ? window.innerHeight - 180 : 700}
         />
