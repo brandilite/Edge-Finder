@@ -7,9 +7,8 @@ export async function GET(request: NextRequest) {
   // Note: Gamma API does NOT support order/ascending params (returns 422)
   // We fetch and sort by volume24hr on our side instead
   const params = new URLSearchParams();
-  params.set('active', 'true');
   params.set('closed', 'false');
-  params.set('limit', searchParams.get('limit') || '50');
+  params.set('limit', searchParams.get('limit') || '100');
 
   const tag = searchParams.get('tag');
   if (tag) params.set('tag', tag);
