@@ -139,9 +139,13 @@ export default function Sidebar() {
 
       {/* Bottom: User + Settings */}
       <div className="border-t border-[#1a1a1a] p-2 flex-shrink-0">
-        <div
+        <Link
+          href="/account"
           className={clsx(
-            'flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-gray-400 hover:bg-[#111111] hover:text-gray-200 transition-colors cursor-pointer',
+            'flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] transition-colors',
+            pathname === '/account'
+              ? 'bg-[#015608]/20 text-[#22c55e] border border-[#015608]/30'
+              : 'text-gray-400 hover:bg-[#111111] hover:text-gray-200',
             collapsed && 'justify-center'
           )}
         >
@@ -154,7 +158,7 @@ export default function Sidebar() {
               <Settings size={14} className="text-gray-500 flex-shrink-0" />
             </div>
           )}
-        </div>
+        </Link>
       </div>
     </aside>
   );
