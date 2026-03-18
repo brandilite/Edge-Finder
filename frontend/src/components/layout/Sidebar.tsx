@@ -26,6 +26,7 @@ import {
   Bell,
   Star,
   DollarSign,
+  Zap,
 } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
 import clsx from 'clsx';
@@ -41,6 +42,7 @@ const navItems = [
   { label: 'Earnings', href: '/earnings', icon: DollarSign },
   { label: 'Watchlist', href: '/watchlist', icon: Star },
   { label: 'Price Alerts', href: '/alerts', icon: Bell },
+  { label: 'Predictions', href: '/predictions', icon: Zap },
   { label: 'Macro Map', href: '/macro', icon: Globe },
   { label: 'Scorecard', href: '/top-setups', icon: TrendingUp },
   { label: 'COT Analysis', href: '/cot', icon: PieChart },

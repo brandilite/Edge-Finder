@@ -10,6 +10,7 @@ const MARKET_TABS = [
   { label: 'Forex', value: 'forex', href: '/markets/forex' },
   { label: 'Commodities', value: 'commodities', href: '/markets/commodities' },
   { label: 'Indices', value: 'indices', href: '/markets/indices' },
+  { label: 'Predictions', value: 'predictions', href: '/predictions' },
 ];
 
 export default function Header() {
@@ -21,6 +22,7 @@ export default function Header() {
     if (pathname.startsWith('/markets/forex')) return 'forex';
     if (pathname.startsWith('/markets/commodities')) return 'commodities';
     if (pathname.startsWith('/markets/indices')) return 'indices';
+    if (pathname.startsWith('/predictions')) return 'predictions';
     if (pathname === '/') return 'us';
     return '';
   })();
