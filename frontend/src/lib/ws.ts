@@ -40,7 +40,7 @@ class WebSocketManager {
         this.notifyConnectionStatus(true);
 
         // Re-subscribe to all active symbols
-        for (const symbol of this.subscriptions.keys()) {
+        for (const symbol of Array.from(this.subscriptions.keys())) {
           this.sendSubscribe(symbol);
         }
       };
