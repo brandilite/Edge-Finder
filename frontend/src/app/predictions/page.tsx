@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { Search, TrendingUp, TrendingDown, Minus, ExternalLink, BarChart3, DollarSign, Clock, ChevronRight } from 'lucide-react';
+import { Search, TrendingUp, TrendingDown, Minus, ExternalLink, BarChart3, DollarSign, Clock, ChevronRight, Flame } from 'lucide-react';
 import Link from 'next/link';
 import clsx from 'clsx';
 
@@ -47,7 +47,7 @@ interface PolyEvent {
 }
 
 const CATEGORIES = [
-  { label: 'All', value: '' },
+  { label: 'Trending', value: '' },
   { label: 'Finance', value: 'finance' },
   { label: 'Crypto', value: 'crypto' },
   { label: 'Politics', value: 'politics' },
@@ -127,11 +127,10 @@ function EventCard({ event }: { event: PolyEvent }) {
           {topMarkets.map((market) => {
             const prices = market.outcomePrices?.map((p) => parseFloat(p)) || [];
             const outcomes = market.outcomes || [];
-            const topOutcome = outcomes[0];
-            const topPrice = prices[0];
 
             // For multi-outcome events, show groupItemTitle
             const label = event.markets.length > 1 ? (market.groupItemTitle || market.question) : outcomes[0];
+            const topPrice = prices[0];
 
             return (
               <div key={market.id} className="flex items-center justify-between py-1.5">
@@ -185,23 +184,26 @@ export default function PredictionsPage() {
     setLoading(true);
     setError('');
     try {
-      let url = 'https://gamma-api.polymarket.com/events?active=true&closed=false&limit=30';
-      if (search) {
-        url += `&title=${encodeURIComponent(search)}`;
+      // Use our proxy API route to avoid CORS
+      const params = new URLSearchParams();
+      params.set('limit', '30');
+      if (search) params.set('title', search);
+      if (category) params.set('tag', category);
+
+      const res = await fetch(`/api/polymarket/events?${params.toString()}`);
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || `API error: ${res.status}`);
       }
-      if (category) {
-        url += `&tag=${encodeURIComponent(category)}`;
-      }
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`API error: ${res.status}`);
       const data: PolyEvent[] = await res.json();
 
-      // Sort by volume descending
-      data.sort((a, b) => (b.volume || 0) - (a.volume || 0));
-      setEvents(data);
+      // Filter to only events with markets and sort by 24h volume (trending)
+      const withMarkets = data.filter((e) => e.markets && e.markets.length > 0);
+      withMarkets.sort((a, b) => (b.volume24hr || 0) - (a.volume24hr || 0));
+      setEvents(withMarkets);
     } catch (err) {
       console.error('Failed to fetch prediction markets:', err);
-      setError('Failed to load prediction markets. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to load prediction markets.');
     } finally {
       setLoading(false);
     }
@@ -222,8 +224,11 @@ export default function PredictionsPage() {
     <div className="p-5 space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-white">Prediction Markets</h1>
-          <p className="text-sm text-gray-500 mt-1">Live events from Polymarket</p>
+          <div className="flex items-center gap-2">
+            <Flame size={20} className="text-orange-500" />
+            <h1 className="text-lg font-semibold text-white">Prediction Markets</h1>
+          </div>
+          <p className="text-sm text-gray-500 mt-1">Trending live events from Polymarket</p>
         </div>
         <a
           href="https://polymarket.com"
@@ -270,6 +275,7 @@ export default function PredictionsPage() {
       {error && (
         <div className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg px-4 py-3">
           {error}
+          <button onClick={fetchEvents} className="ml-3 text-xs underline hover:text-red-300">Retry</button>
         </div>
       )}
 
@@ -293,7 +299,7 @@ export default function PredictionsPage() {
             </div>
           ))}
         </div>
-      ) : events.length === 0 ? (
+      ) : events.length === 0 && !error ? (
         <div className="text-center py-16">
           <BarChart3 size={40} className="text-gray-600 mx-auto mb-3" />
           <h3 className="text-white font-medium mb-1">No markets found</h3>

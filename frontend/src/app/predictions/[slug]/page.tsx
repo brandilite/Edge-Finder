@@ -160,7 +160,8 @@ export default function PredictionDetailPage() {
   const fetchEvent = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`https://gamma-api.polymarket.com/events?slug=${slug}`);
+      const res = await fetch(`/api/polymarket/events?slug=${slug}`);
+      if (!res.ok) throw new Error(`API error: ${res.status}`);
       const data = await res.json();
       if (data && data.length > 0) {
         setEvent(data[0]);
@@ -195,7 +196,7 @@ export default function PredictionDetailPage() {
       const tokenId = market.clobTokenIds[0];
       try {
         const res = await fetch(
-          `https://clob.polymarket.com/prices-history?market=${tokenId}&interval=${timeRange.toLowerCase()}&fidelity=${fidelity}`
+          `/api/polymarket/prices?market=${tokenId}&interval=${timeRange.toLowerCase()}&fidelity=${fidelity}`
         );
         if (res.ok) {
           const data = await res.json();
