@@ -4,15 +4,15 @@ import EconomicCalendar from '@/components/tv/EconomicCalendar';
 
 export default function EconomicPage() {
   return (
-    <div className="space-y-4">
+    <div className="p-5 space-y-4">
       <div>
-        <h1 className="text-xl font-bold text-gray-100">Economic Calendar</h1>
+        <h1 className="text-lg font-semibold text-gray-100">Economic Calendar</h1>
         <p className="text-sm text-gray-500 mt-1">
           Upcoming economic events, releases, and their impact — powered by TradingView
         </p>
       </div>
 
-      <div className="rounded-lg border border-[#243040] overflow-hidden">
+      <div className="rounded-lg border border-[#2a2f3a] overflow-hidden">
         <EconomicCalendar
           height={typeof window !== 'undefined' ? window.innerHeight - 180 : 700}
         />

@@ -13,25 +13,33 @@ body {
   padding: 0;
 }
 
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0f1419;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #243040;
+  background: #2a2f3a;
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2d3d52;
+  background: #3a4050;
 }
 
 @layer utilities {
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: #243040 #0f1419;
+    scrollbar-color: #2a2f3a transparent;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
   }
 }
 
@@ -39,7 +47,45 @@ body {
 .tradingview-widget-container {
   position: relative;
 }
-
 .tradingview-widget-copyright {
   display: none !important;
 }
+
+/* Backdrop blur for sticky chat */
+.chat-backdrop {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* Subtle card hover */
+.card-hover {
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+.card-hover:hover {
+  background-color: #1f2937;
+  border-color: #3a4050;
+}
+
+/* Tab active indicator */
+.tab-active {
+  position: relative;
+}
+.tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #3b82f6;
+  border-radius: 1px 1px 0 0;
+}
+
+/* Animate sidebar */
+.sidebar-transition {
+  transition: width 200ms ease, transform 200ms ease;
+}
+
+/* Green/red change colors */
+.change-positive { color: #22c55e; }
+.change-negative { color: #ef4444; }

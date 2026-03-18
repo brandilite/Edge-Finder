@@ -28,21 +28,21 @@ function EconomyMap({ height = 400 }: { height?: number }) {
 
 export default function MacroPage() {
   return (
-    <div className="space-y-6">
+    <div className="p-5 space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-100">Macro Map</h1>
+        <h1 className="text-lg font-semibold text-gray-100">Macro Map</h1>
         <p className="text-sm text-gray-500 mt-1">
           Global economic overview — GDP, interest rates, inflation, and more
         </p>
       </div>
 
-      <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+      <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
         <EconomyMap height={500} />
       </div>
 
       <div>
         <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Economic Calendar</h2>
-        <div className="rounded-lg border border-[#243040] overflow-hidden">
+        <div className="rounded-lg border border-[#2a2f3a] overflow-hidden">
           <EconomicCalendar height={450} />
         </div>
       </div>

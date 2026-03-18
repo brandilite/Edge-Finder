@@ -29,9 +29,9 @@ export default function SeasonalityPage() {
   const [range, setRange] = useState('12M');
 
   return (
-    <div className="space-y-6">
+    <div className="p-5 space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-100">Seasonality</h1>
+        <h1 className="text-lg font-semibold text-gray-100">Seasonality</h1>
         <p className="text-sm text-gray-500 mt-1">
           Historical price patterns and seasonal trends
         </p>
@@ -46,7 +46,7 @@ export default function SeasonalityPage() {
               className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                 selected.tv === s.tv
                   ? 'bg-blue-500 text-white'
-                  : 'bg-[#1c2530] text-gray-400 hover:text-gray-200'
+                  : 'bg-[#1f2937] text-gray-400 hover:text-gray-200'
               }`}
             >
               {s.label}
@@ -73,14 +73,14 @@ export default function SeasonalityPage() {
       <AdvancedChart symbol={selected.tv} height={500} interval="M" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
-          <div className="px-3 py-2 border-b border-[#243040]">
+        <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
+          <div className="px-3 py-2 border-b border-[#2a2f3a]">
             <span className="text-xs font-semibold text-gray-400 uppercase">Weekly View</span>
           </div>
           <MiniChart symbol={selected.tv} height={250} dateRange={range} />
         </div>
-        <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
-          <div className="px-3 py-2 border-b border-[#243040]">
+        <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
+          <div className="px-3 py-2 border-b border-[#2a2f3a]">
             <span className="text-xs font-semibold text-gray-400 uppercase">Monthly Technical</span>
           </div>
           <TechnicalAnalysis symbol={selected.tv} interval="1M" height={250} />

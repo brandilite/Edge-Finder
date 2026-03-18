@@ -36,12 +36,12 @@ export default function ChartsPage() {
   const [interval, setInterval] = useState('D');
 
   return (
-    <div className="space-y-4">
+    <div className="p-5 space-y-4">
       <div className="flex flex-wrap items-center gap-3">
         <select
           value={selectedSymbol}
           onChange={(e) => setSelectedSymbol(e.target.value)}
-          className="bg-[#1c2530] border border-[#243040] rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-blue-500/50"
+          className="bg-[#1a1f2e] border border-[#2a2f3a] rounded-lg px-3 py-2 text-sm text-gray-200 outline-none focus:border-blue-500/50"
         >
           {POPULAR_SYMBOLS.map((s) => (
             <option key={s.tv} value={s.tv}>{s.label}</option>
@@ -56,7 +56,7 @@ export default function ChartsPage() {
               className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
                 interval === tf.value
                   ? 'bg-blue-500 text-white'
-                  : 'bg-[#1c2530] text-gray-400 hover:text-gray-200'
+                  : 'bg-[#1a1f2e] text-gray-400 hover:text-gray-200 hover:bg-[#1f2937]'
               }`}
             >
               {tf.label}
@@ -74,13 +74,13 @@ export default function ChartsPage() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="bg-[#151c24] rounded-lg border border-[#243040] overflow-hidden">
+        <div className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden">
           <TechnicalAnalysis symbol={selectedSymbol} interval="1m" height={380} />
         </div>
-        <div className="bg-[#151c24] rounded-lg border border-[#243040] overflow-hidden">
+        <div className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden">
           <TechnicalAnalysis symbol={selectedSymbol} interval="1h" height={380} />
         </div>
-        <div className="bg-[#151c24] rounded-lg border border-[#243040] overflow-hidden">
+        <div className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden">
           <TechnicalAnalysis symbol={selectedSymbol} interval="1D" height={380} />
         </div>
       </div>

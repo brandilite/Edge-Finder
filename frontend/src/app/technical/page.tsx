@@ -23,9 +23,9 @@ export default function TechnicalPage() {
   const [selected, setSelected] = useState(SYMBOLS[0].tv);
 
   return (
-    <div className="space-y-6">
+    <div className="p-5 space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-100">Technical Analysis</h1>
+        <h1 className="text-lg font-semibold text-gray-100">Technical Analysis</h1>
         <p className="text-sm text-gray-500 mt-1">Real-time technical ratings from TradingView</p>
       </div>
 
@@ -37,7 +37,7 @@ export default function TechnicalPage() {
             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
               selected === s.tv
                 ? 'bg-blue-500 text-white'
-                : 'bg-[#1c2530] text-gray-400 hover:text-gray-200 hover:bg-[#243040]'
+                : 'bg-[#1a1f2e] text-gray-400 hover:text-gray-200 hover:bg-[#1f2937]'
             }`}
           >
             {s.label}
@@ -46,15 +46,15 @@ export default function TechnicalPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
+        <div className="space-y-3">
           <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Chart</h2>
-          <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+          <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
             <MiniChart symbol={selected} height={300} dateRange="3M" />
           </div>
         </div>
-        <div className="space-y-4">
+        <div className="space-y-3">
           <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">Daily Rating</h2>
-          <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+          <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
             <TechnicalAnalysis symbol={selected} interval="1D" height={300} />
           </div>
         </div>
@@ -63,19 +63,19 @@ export default function TechnicalPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">1 Minute</h3>
-          <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+          <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
             <TechnicalAnalysis symbol={selected} interval="1m" height={350} />
           </div>
         </div>
         <div>
           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">1 Hour</h3>
-          <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+          <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
             <TechnicalAnalysis symbol={selected} interval="1h" height={350} />
           </div>
         </div>
         <div>
           <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">1 Week</h3>
-          <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+          <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
             <TechnicalAnalysis symbol={selected} interval="1W" height={350} />
           </div>
         </div>

@@ -19,10 +19,10 @@ export default function SentimentPage() {
   const [view, setView] = useState<'grid' | 'detail'>('grid');
 
   return (
-    <div className="space-y-6">
+    <div className="p-5 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-bold text-gray-100">Market Sentiment</h1>
+          <h1 className="text-lg font-semibold text-gray-100">Market Sentiment</h1>
           <p className="text-sm text-gray-500 mt-1">
             Technical sentiment across major pairs — oscillators + moving averages
           </p>
@@ -31,7 +31,7 @@ export default function SentimentPage() {
           <button
             onClick={() => setView('grid')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              view === 'grid' ? 'bg-blue-500 text-white' : 'bg-[#1c2530] text-gray-400'
+              view === 'grid' ? 'bg-blue-500 text-white' : 'bg-[#1f2937] text-gray-400'
             }`}
           >
             Grid
@@ -39,7 +39,7 @@ export default function SentimentPage() {
           <button
             onClick={() => setView('detail')}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              view === 'detail' ? 'bg-blue-500 text-white' : 'bg-[#1c2530] text-gray-400'
+              view === 'detail' ? 'bg-blue-500 text-white' : 'bg-[#1f2937] text-gray-400'
             }`}
           >
             Detail
@@ -52,9 +52,9 @@ export default function SentimentPage() {
           {PAIRS.map((pair) => (
             <div
               key={pair.tv}
-              className="bg-[#151c24] rounded-lg border border-[#243040] overflow-hidden"
+              className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden"
             >
-              <div className="px-3 py-2 border-b border-[#243040]">
+              <div className="px-3 py-2 border-b border-[#2a2f3a]">
                 <span className="text-sm font-semibold text-gray-200">{pair.label}</span>
               </div>
               <TechnicalAnalysis symbol={pair.tv} interval="1D" height={280} />
@@ -62,13 +62,13 @@ export default function SentimentPage() {
           ))}
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="p-5 space-y-4">
           {PAIRS.map((pair) => (
             <div
               key={pair.tv}
-              className="bg-[#151c24] rounded-lg border border-[#243040] overflow-hidden"
+              className="bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden"
             >
-              <div className="px-4 py-3 border-b border-[#243040]">
+              <div className="px-4 py-3 border-b border-[#2a2f3a]">
                 <span className="text-sm font-bold text-gray-200">{pair.label}</span>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-0">

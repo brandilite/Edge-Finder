@@ -23,12 +23,12 @@ export default function AnalysisPage() {
   const { messages, sendMessage, isLoading, clearChat } = useLLMChat();
 
   return (
-    <div className="space-y-4">
+    <div className="p-5 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Bot className="text-cyan-400" size={24} />
           <div>
-            <h1 className="text-xl font-bold text-gray-100">AI Analysis</h1>
+            <h1 className="text-lg font-semibold text-gray-100">AI Analysis</h1>
             <p className="text-sm text-gray-500">Ask Claude about any market, setup, or technical analysis</p>
           </div>
         </div>
@@ -36,7 +36,7 @@ export default function AnalysisPage() {
           <select
             value={contextSymbol}
             onChange={(e) => setContextSymbol(e.target.value)}
-            className="bg-[#1c2530] border border-[#243040] rounded-lg px-3 py-2 text-sm text-white"
+            className="bg-[#1f2937] border border-[#2a2f3a] rounded-lg px-3 py-2 text-sm text-white"
           >
             {SYMBOLS.map((s) => (
               <option key={s.tv} value={s.tv}>{s.label}</option>
@@ -44,7 +44,7 @@ export default function AnalysisPage() {
           </select>
           <button
             onClick={clearChat}
-            className="px-3 py-2 text-sm bg-[#1c2530] text-gray-400 hover:text-white rounded-lg border border-[#243040] transition-colors"
+            className="px-3 py-2 text-sm bg-[#1f2937] text-gray-400 hover:text-white rounded-lg border border-[#2a2f3a] transition-colors"
           >
             Clear
           </button>
@@ -56,21 +56,21 @@ export default function AnalysisPage() {
         <div className="lg:col-span-2 space-y-4">
           <AdvancedChart symbol={contextSymbol} height={400} />
           <div className="grid grid-cols-3 gap-3">
-            <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+            <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
               <TechnicalAnalysis symbol={contextSymbol} interval="1m" height={250} />
             </div>
-            <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+            <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
               <TechnicalAnalysis symbol={contextSymbol} interval="1h" height={250} />
             </div>
-            <div className="rounded-lg border border-[#243040] overflow-hidden bg-[#151c24]">
+            <div className="rounded-lg border border-[#2a2f3a] overflow-hidden bg-[#1a1f2e]">
               <TechnicalAnalysis symbol={contextSymbol} interval="1D" height={250} />
             </div>
           </div>
         </div>
 
         {/* Chat */}
-        <div className="flex flex-col bg-[#151c24] rounded-lg border border-[#243040] overflow-hidden" style={{ height: 'calc(100vh - 160px)' }}>
-          <div className="px-4 py-3 border-b border-[#243040] bg-[#1c2530]">
+        <div className="flex flex-col bg-[#1a1f2e] rounded-lg border border-[#2a2f3a] overflow-hidden" style={{ height: 'calc(100vh - 160px)' }}>
+          <div className="px-4 py-3 border-b border-[#2a2f3a] bg-[#1f2937]">
             <span className="text-sm font-semibold text-gray-300">Chat with AI</span>
           </div>
           <div className="flex-1 overflow-hidden flex flex-col">

@@ -18,9 +18,9 @@ export default function NewsPage() {
   const current = MARKETS[selected];
 
   return (
-    <div className="space-y-4">
+    <div className="p-5 space-y-4">
       <div>
-        <h1 className="text-xl font-bold text-gray-100">Market News</h1>
+        <h1 className="text-lg font-semibold text-gray-100">Market News</h1>
         <p className="text-sm text-gray-500 mt-1">Real-time news feed from TradingView</p>
       </div>
 
@@ -32,7 +32,7 @@ export default function NewsPage() {
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               selected === i
                 ? 'bg-blue-500 text-white'
-                : 'bg-[#1c2530] text-gray-400 hover:text-white'
+                : 'bg-[#1f2937] text-gray-400 hover:text-white'
             }`}
           >
             {m.label}
@@ -40,7 +40,7 @@ export default function NewsPage() {
         ))}
       </div>
 
-      <div className="rounded-lg border border-[#243040] overflow-hidden">
+      <div className="rounded-lg border border-[#2a2f3a] overflow-hidden">
         <Timeline
           height={Math.max(600, typeof window !== 'undefined' ? window.innerHeight - 220 : 700)}
           feedMode={current.feed}

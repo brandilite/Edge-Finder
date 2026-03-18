@@ -11,9 +11,9 @@ export default function HeatmapPage() {
   const [tab, setTab] = useState<typeof TABS[number]>('Forex');
 
   return (
-    <div className="space-y-4">
+    <div className="p-5 space-y-4">
       <div>
-        <h1 className="text-xl font-bold text-gray-100">Market Heatmap</h1>
+        <h1 className="text-lg font-semibold text-gray-100">Market Heatmap</h1>
         <p className="text-sm text-gray-500 mt-1">Visual strength/weakness across markets</p>
       </div>
 
@@ -25,7 +25,7 @@ export default function HeatmapPage() {
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               tab === t
                 ? 'bg-blue-500 text-white'
-                : 'bg-[#1c2530] text-gray-400 hover:text-white'
+                : 'bg-[#1f2937] text-gray-400 hover:text-white'
             }`}
           >
             {t}
@@ -33,7 +33,7 @@ export default function HeatmapPage() {
         ))}
       </div>
 
-      <div className="rounded-lg border border-[#243040] overflow-hidden">
+      <div className="rounded-lg border border-[#2a2f3a] overflow-hidden">
         {tab === 'Forex' && <ForexHeatmap height={600} />}
         {tab === 'Stocks' && <StockHeatmap height={600} dataSource="SPX500" />}
         {tab === 'Crypto' && <CryptoHeatmap height={600} />}

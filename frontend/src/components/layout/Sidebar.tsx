@@ -7,18 +7,21 @@ import {
   TrendingUp,
   Activity,
   CandlestickChart,
-  PieChart,
+  LayoutGrid,
   Gauge,
   Globe,
   Calendar,
   Snowflake,
   Newspaper,
   Bot,
-  LayoutGrid,
+  Layers,
   ChevronLeft,
   ChevronRight,
-  Layers,
   ScanSearch,
+  Plus,
+  Settings,
+  PieChart,
+  User,
 } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
 import clsx from 'clsx';
@@ -37,7 +40,7 @@ const navItems = [
   { label: 'Sentiment', href: '/sentiment', icon: Gauge },
   { label: 'Seasonality', href: '/seasonality', icon: Snowflake },
   { label: 'AI Analysis', href: '/analysis', icon: Bot },
-  { label: 'All Widgets', href: '/widgets', icon: Layers },
+  { label: 'Widgets', href: '/widgets', icon: Layers },
 ];
 
 export default function Sidebar() {
@@ -48,25 +51,48 @@ export default function Sidebar() {
   return (
     <aside
       className={clsx(
-        'fixed left-0 top-0 h-screen bg-[#151c24] border-r border-[#243040] flex flex-col z-40 transition-all duration-300',
-        collapsed ? 'w-16' : 'w-60'
+        'fixed left-0 top-0 h-screen bg-[#151c24] border-r border-[#2a2f3a] flex flex-col z-40 sidebar-transition',
+        collapsed ? 'w-[60px]' : 'w-[240px]'
       )}
     >
-      <div className="flex items-center justify-between h-14 px-4 border-b border-[#243040]">
+      {/* Logo + Collapse */}
+      <div className="flex items-center h-14 px-3 border-b border-[#2a2f3a] flex-shrink-0">
         {!collapsed && (
-          <Link href="/" className="text-lg font-bold text-blue-400 tracking-tight">
-            EdgeFinder
+          <Link href="/" className="flex items-center gap-2 flex-1 min-w-0">
+            <div className="w-7 h-7 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+              <Activity size={15} className="text-blue-400" />
+            </div>
+            <span className="text-[15px] font-semibold text-gray-100 tracking-tight truncate">
+              EdgeFinder
+            </span>
           </Link>
         )}
         <button
           onClick={toggleSidebar}
-          className="p-1.5 rounded-lg hover:bg-[#1c2530] text-gray-400 hover:text-gray-200 transition-colors"
+          className={clsx(
+            'p-1.5 rounded-md hover:bg-[#1f2937] text-gray-500 hover:text-gray-300 transition-colors flex-shrink-0',
+            collapsed && 'mx-auto'
+          )}
         >
-          {collapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
+          {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
         </button>
       </div>
 
-      <nav className="flex-1 overflow-y-auto py-2 scrollbar-thin">
+      {/* New Thread / Search button */}
+      <div className="px-2 py-3 border-b border-[#2a2f3a]">
+        <button
+          className={clsx(
+            'flex items-center gap-2 w-full rounded-lg text-sm font-medium text-gray-300 hover:bg-[#1f2937] transition-colors',
+            collapsed ? 'justify-center p-2' : 'px-3 py-2'
+          )}
+        >
+          <Plus size={16} className="flex-shrink-0" />
+          {!collapsed && <span>New Thread</span>}
+        </button>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto py-2 scrollbar-thin px-2">
         {navItems.map((item) => {
           const isActive =
             item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
@@ -76,26 +102,38 @@ export default function Sidebar() {
               key={item.href}
               href={item.href}
               className={clsx(
-                'flex items-center gap-3 mx-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+                'flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-colors mb-0.5',
                 isActive
-                  ? 'bg-blue-500/10 text-blue-400'
-                  : 'text-gray-400 hover:bg-[#1c2530] hover:text-gray-200'
+                  ? 'bg-[#1f2937] text-gray-100'
+                  : 'text-gray-400 hover:bg-[#1f2937]/60 hover:text-gray-200'
               )}
               title={collapsed ? item.label : undefined}
             >
-              <Icon size={18} className="flex-shrink-0" />
-              {!collapsed && <span>{item.label}</span>}
+              <Icon size={17} className="flex-shrink-0" />
+              {!collapsed && <span className="truncate">{item.label}</span>}
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-3 border-t border-[#243040]">
-        {!collapsed && (
-          <div className="text-[10px] text-gray-600 text-center">
-            Powered by TradingView
+      {/* Bottom: User + Settings */}
+      <div className="border-t border-[#2a2f3a] p-2 flex-shrink-0">
+        <div
+          className={clsx(
+            'flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] text-gray-400 hover:bg-[#1f2937] hover:text-gray-200 transition-colors cursor-pointer',
+            collapsed && 'justify-center'
+          )}
+        >
+          <div className="w-6 h-6 rounded-full bg-[#2a2f3a] flex items-center justify-center flex-shrink-0">
+            <User size={13} className="text-gray-400" />
           </div>
-        )}
+          {!collapsed && (
+            <div className="flex-1 min-w-0 flex items-center justify-between">
+              <span className="truncate">Account</span>
+              <Settings size={14} className="text-gray-500 flex-shrink-0" />
+            </div>
+          )}
+        </div>
       </div>
     </aside>
   );
