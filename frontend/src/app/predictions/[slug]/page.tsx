@@ -68,6 +68,15 @@ interface PricePoint {
   p: number;
 }
 
+// Parse JSON string fields from the Gamma API (outcomePrices/outcomes come as JSON strings)
+function parseJsonField(val: any): string[] {
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string') {
+    try { const parsed = JSON.parse(val); return Array.isArray(parsed) ? parsed : []; } catch { return []; }
+  }
+  return [];
+}
+
 function formatVolume(vol: number): string {
   if (vol >= 1_000_000) return `$${(vol / 1_000_000).toFixed(1)}M`;
   if (vol >= 1_000) return `$${(vol / 1_000).toFixed(0)}K`;
@@ -192,8 +201,9 @@ export default function PredictionDetailPage() {
 
     // Fetch price history for each market's first outcome token
     for (const market of event.markets.slice(0, 8)) {
-      if (!market.clobTokenIds || market.clobTokenIds.length === 0) continue;
-      const tokenId = market.clobTokenIds[0];
+      const tokenIds = parseJsonField(market.clobTokenIds);
+      if (tokenIds.length === 0) continue;
+      const tokenId = tokenIds[0];
       try {
         const res = await fetch(
           `/api/polymarket/prices?market=${tokenId}&interval=${timeRange.toLowerCase()}&fidelity=${fidelity}`
@@ -305,8 +315,8 @@ export default function PredictionDetailPage() {
           {event.markets.slice(0, 8).map((market, idx) => {
             const color = market.seriesColor || CHART_COLORS[idx % CHART_COLORS.length];
             const data = priceHistory[market.id] || [];
-            const prices = market.outcomePrices?.map((p) => parseFloat(p)) || [];
-            const label = totalMarkets > 1 ? (market.groupItemTitle || market.question) : market.outcomes?.[0] || market.question;
+            const prices = parseJsonField(market.outcomePrices).map((p) => parseFloat(p));
+            const label = totalMarkets > 1 ? (market.groupItemTitle || market.question) : parseJsonField(market.outcomes)[0] || market.question;
 
             return (
               <div key={market.id}>
@@ -332,8 +342,8 @@ export default function PredictionDetailPage() {
         <div className="flex flex-wrap gap-4 mt-4 pt-3 border-t border-[#1a1a1a]">
           {event.markets.slice(0, 8).map((market, idx) => {
             const color = market.seriesColor || CHART_COLORS[idx % CHART_COLORS.length];
-            const label = totalMarkets > 1 ? (market.groupItemTitle || market.question) : market.outcomes?.[0];
-            const prices = market.outcomePrices?.map((p) => parseFloat(p)) || [];
+            const label = totalMarkets > 1 ? (market.groupItemTitle || market.question) : parseJsonField(market.outcomes)[0];
+            const prices = parseJsonField(market.outcomePrices).map((p) => parseFloat(p));
             return (
               <div key={market.id} className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
@@ -352,7 +362,7 @@ export default function PredictionDetailPage() {
         </div>
         <div className="divide-y divide-[#1a1a1a]">
           {event.markets.map((market, idx) => {
-            const prices = market.outcomePrices?.map((p) => parseFloat(p)) || [];
+            const prices = parseJsonField(market.outcomePrices).map((p) => parseFloat(p));
             const label = totalMarkets > 1 ? (market.groupItemTitle || market.question) : market.question;
             const color = market.seriesColor || CHART_COLORS[idx % CHART_COLORS.length];
 

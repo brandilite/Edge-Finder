@@ -83,9 +83,18 @@ function PriceChange({ change }: { change: number }) {
   );
 }
 
+// Parse JSON string fields from the Gamma API (outcomePrices/outcomes come as JSON strings)
+function parseJsonField(val: any): string[] {
+  if (Array.isArray(val)) return val;
+  if (typeof val === 'string') {
+    try { const parsed = JSON.parse(val); return Array.isArray(parsed) ? parsed : []; } catch { return []; }
+  }
+  return [];
+}
+
 function EventCard({ event }: { event: PolyEvent }) {
-  const topMarkets = event.markets.slice(0, 4);
-  const hasMore = event.markets.length > 4;
+  const topMarkets = (event.markets || []).slice(0, 4);
+  const hasMore = (event.markets || []).length > 4;
 
   return (
     <Link
@@ -110,7 +119,7 @@ function EventCard({ event }: { event: PolyEvent }) {
             <div className="flex items-center gap-3 mt-1">
               <span className="flex items-center gap-1 text-[11px] text-gray-500">
                 <DollarSign size={10} />
-                {formatVolume(event.volume)} vol.
+                {formatVolume(Number(event.volume) || 0)} vol.
               </span>
               {event.endDate && (
                 <span className="flex items-center gap-1 text-[11px] text-gray-500">
@@ -125,11 +134,11 @@ function EventCard({ event }: { event: PolyEvent }) {
         {/* Markets / Outcomes */}
         <div className="space-y-2">
           {topMarkets.map((market) => {
-            const prices = market.outcomePrices?.map((p) => parseFloat(p)) || [];
-            const outcomes = market.outcomes || [];
+            const prices = parseJsonField(market.outcomePrices).map((p) => parseFloat(p));
+            const outcomes = parseJsonField(market.outcomes);
 
             // For multi-outcome events, show groupItemTitle
-            const label = event.markets.length > 1 ? (market.groupItemTitle || market.question) : outcomes[0];
+            const label = (event.markets || []).length > 1 ? (market.groupItemTitle || market.question) : outcomes[0] || market.question;
             const topPrice = prices[0];
 
             return (
